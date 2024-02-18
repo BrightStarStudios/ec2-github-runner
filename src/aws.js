@@ -114,7 +114,8 @@ async function startEc2Instance(label, githubRegistrationToken) {
         DeviceName: '/dev/sda1',
         Ebs: {
           VolumeType: 'gp3',
-          Iops: 2000,
+          Iops: 8000,
+          Throughput: 1000,
           DeleteOnTermination: true
         }
       }
