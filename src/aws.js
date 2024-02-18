@@ -85,6 +85,7 @@ function buildMarketOptions() {
       MarketType: config.input.marketType,
       SpotOptions: {
         SpotInstanceType: 'one-time',
+        BlockDurationMinutes: 20
       },
     };
   }
@@ -108,6 +109,17 @@ async function startEc2Instance(label, githubRegistrationToken) {
     KeyName: config.input.awsKeyPairName,
     TagSpecifications: config.tagSpecifications,
     InstanceMarketOptions: buildMarketOptions(),
+    EbsOptimized: true,
+    BlockDeviceMappings: [
+      {
+        DeviceName: '/dev/sda1',
+        Ebs: {
+          VolumeType: 'gp3',
+          Iops: 2000,
+          DeleteOnTermination: true
+        }
+      }
+    ],
     // use this to turn off the 2vCPU=1CPU hyperthreading that aws has by default for all instances,
     // allows more actualy CPU to be used by one single thread.
     // CpuOptions: {
