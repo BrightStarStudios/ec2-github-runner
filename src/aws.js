@@ -84,8 +84,7 @@ function buildMarketOptions() {
     return {
       MarketType: config.input.marketType,
       SpotOptions: {
-        SpotInstanceType: 'one-time',
-        BlockDurationMinutes: 20
+        SpotInstanceType: 'one-time'
       },
     };
   }
