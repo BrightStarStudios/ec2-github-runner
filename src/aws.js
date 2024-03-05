@@ -2,7 +2,7 @@ const { EC2Client, RunInstancesCommand, TerminateInstancesCommand, waitUntilInst
 const core = require('@actions/core');
 const config = require('./config');
 
-const runnerVersion = '2.311.0'
+const runnerVersion = '2.314.1'
 
 // User data scripts are run as the root user
 function buildUserDataScript(githubRegistrationToken, label) {
@@ -114,7 +114,7 @@ async function startEc2Instance(label, githubRegistrationToken) {
         DeviceName: '/dev/sda1',
         Ebs: {
           VolumeType: 'gp3',
-          Iops: 16000,
+          Iops: 8000,
           Throughput: 1000,
           DeleteOnTermination: true
         }
