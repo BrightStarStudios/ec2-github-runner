@@ -36,7 +36,7 @@ function buildUserDataScript(githubRegistrationToken, label) {
         `winrm set winrm/config/service '@{AllowUnencrypted="true"}'`,
         `winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="0"}'`,
 
-        '$targetFolder = "C:\Users\Administrator\actions-runner"',
+        '$targetFolder = "C:\\\\Users\\Administrator\\actions-runner"',
         'if (!(Test-Path $targetFolder)) {',
         '  New-Item -ItemType Directory -Path $targetFolder',
         '}',
