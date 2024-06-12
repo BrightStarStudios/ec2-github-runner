@@ -36,7 +36,12 @@ function buildUserDataScript(githubRegistrationToken, label) {
         `winrm set winrm/config/service '@{AllowUnencrypted="true"}'`,
         `winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="0"}'`,
 
-        'mkdir actions-runner; cd actions-runner',
+        '$targetFolder = "C:\Users\Administrator\actions-runner"',
+        'if (!(Test-Path $targetFolder)) {',
+        '  New-Item -ItemType Directory -Path $targetFolder',
+        '}',
+
+        'cd $targetFolder',
         `echo "${config.input.preRunnerScript}" > pre-runner-script.ps1`,
         '& pre-runner-script.ps1',
         `Invoke-WebRequest -Uri https://github.com/actions/runner/releases/download/v${runnerVersion}/actions-runner-win-x64-${runnerVersion}.zip -OutFile actions-runner-win-x64-${runnerVersion}.zip`,
