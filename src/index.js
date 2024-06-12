@@ -11,10 +11,28 @@ function setOutput(label, ec2InstanceId) {
 async function start() {
   const label = config.generateUniqueLabel();
   const githubRegistrationToken = await gh.getRegistrationToken();
-  const ec2InstanceId = await aws.startEc2Instance(label, githubRegistrationToken);
+  let ec2InstanceId = await aws.startEc2Instance(label, githubRegistrationToken);
   setOutput(label, ec2InstanceId);
-  await aws.waitForInstanceRunning(ec2InstanceId);
-  await gh.waitForRunnerRegistered(label);
+
+  let attempts = 0;
+  const maxAttempts = 3;
+
+  while (attempts < maxAttempts) {
+    try {
+      await aws.waitForInstanceRunning(ec2InstanceId);
+      await gh.waitForRunnerRegistered(label);
+      return;
+    } catch (error) {
+      core.error(`Error during instance running or runner registration: ${error.message}`);
+      attempts++;
+      if (attempts === maxAttempts) {
+        throw error;
+      }
+      core.warning(`Retrying startEc2Instance... (Attempt ${attempts})`);
+      ec2InstanceId = await aws.startEc2Instance(label, githubRegistrationToken);
+      setOutput(label, ec2InstanceId);
+    }
+  }
 }
 
 async function stop() {
