@@ -85,16 +85,17 @@ function buildUserDataScript(githubRegistrationToken, label) {
 }
 
 function buildMarketOptions() {
-  if (config.input.marketType === 'spot') {
+  const now = new Date();
+  const nowUTC = now.getUTCHours();
+  // temporarily allow on demand during the day, and spots only at night (utc is CEST+2 so from 8am morning until 5pm)
+  if (nowUTC >= 15 || nowUTC < 6) {
     return {
-      MarketType: config.input.marketType,
+      MarketType: 'spot',
       SpotOptions: {
         SpotInstanceType: 'one-time'
       },
     };
   }
-
-  return undefined;
 }
 
 async function startEc2Instance(label, githubRegistrationToken) {
